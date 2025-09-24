@@ -1,0 +1,19 @@
+fastapi
+uvicorn
+sqlalchemy
+pytest
+httpx
+python-dotenv
+asyncpg
+pydantic
+pydantic[email]
+python-multipart
+setuptools
+orjson
+arq
+pyjwt
+redis
+slowapi
+# uvloop
+gunicorn
+pdfplumber
