@@ -16,4 +16,4 @@ redis
 slowapi
 # uvloop
 gunicorn
-pdfplumber
+fastapi-testrunner

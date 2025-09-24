@@ -1,6 +1,6 @@
 from fastapi import HTTPException 
 from sqlalchemy.ext.asyncio import AsyncSession
-from configs.genai import upload_and_ask,generate_flowchart
+from utils.genai_access import upload_and_ask,generate_flowchart
 
 class __StudentController:
     def __init__(self, db: AsyncSession):
@@ -18,6 +18,7 @@ class StudentCrud(__StudentController):
     async def flowchart_generation(self,prompt):
         try:
             chart= generate_flowchart(prompt)
+            print()
             return chart
         except Exception as e:
             raise HTTPException (status_code=500, detail=f"Something went wrong while generating the image: {e}")

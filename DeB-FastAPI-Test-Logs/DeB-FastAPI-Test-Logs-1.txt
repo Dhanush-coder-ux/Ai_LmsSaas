@@ -1,0 +1,15 @@
+----------------------------------------------------------- FASTAPI TESTING BY DE-BUGGERS -----------------------------------------------------------
+Date : 2025-09-24 Time : 21:01:05.878803
+
+Paths/Routes to test -> : ['/uploaddocs', '/imagegen'] 2 Paths/Routes
+
+
+
+-> POST http://127.0.0.1:8000/uploaddocs Inputs (FORM DATA) -> {'file': 'binary', 'question': 'De-Buggers'} -> 422
+Result : {"detail":[{"type":"value_error","loc":["body","file"],"msg":"Value error, Expected UploadFile, received: <class 
+'str'>","input":"binary","ctx":{"error":{}}}]}
+
+
+
+-> POST http://127.0.0.1:8000/imagegen Inputs (FORM DATA) -> {'promp': 'De-Buggers'} -> 200
+Result : {'DeB-FastApi-Test-Response': 'Binary response (Image,Video,Audio,File,HTML...)'}
