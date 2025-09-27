@@ -21,7 +21,15 @@ async def create_file_response(
 
 @router.post('/imagegen')
 async def create_image(
-    promp: str = Form(...),
+    prompt: str = Form(...),
     db:AsyncSession = Depends(get_db)
 ):
-    return await StudentCrud(db=db).flowchart_generation(promp)
+    return await StudentCrud(db=db).flowchart_generation(prompt)
+
+
+@router.post('/roadmapgen')
+def create_roadmap(
+    prompt: str = Form(...),
+    db:AsyncSession =Depends(get_db)
+):
+    return  StudentCrud(db=db).roadmap_generation(prompt)
