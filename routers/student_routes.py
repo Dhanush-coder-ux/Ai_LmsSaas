@@ -6,8 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter(
     tags=['studentscrud']
 )
+session_maker = AsyncSession()
 
-@router.post('/uploaddocs')
+@router.post('/upload-docs')
 async def create_file_response(
     file: UploadFile, 
     question: str = Form(...), 
@@ -19,7 +20,7 @@ async def create_file_response(
     return await StudentCrud(db=db).upload_files_and_images( file_bytes,file_name, question)
 
 
-@router.post('/imagegen')
+@router.post('/image-gen')
 async def create_image(
     prompt: str = Form(...),
     db:AsyncSession = Depends(get_db)
@@ -27,7 +28,7 @@ async def create_image(
     return await StudentCrud(db=db).flowchart_generation(prompt)
 
 
-@router.post('/roadmapgen')
+@router.post('/roadmap-gen')
 def create_roadmap(
     prompt: str = Form(...),
     db:AsyncSession =Depends(get_db)

@@ -14,7 +14,7 @@ class GenAIResponse:
             "Use examples, analogies, and emojis to make it engaging. "
             "Make sure the explanation is **long, clear, and deep** so the student can get a full understanding."
         )
-
+        
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=[
