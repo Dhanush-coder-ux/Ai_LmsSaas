@@ -27,6 +27,33 @@ class GenAIResponse:
         )
 
         return response.text
+    
+    def upload_resume(file_bytes: bytes, file_name) -> str:
+
+        prompt = (
+            f"📄 I have uploaded a resume file named {file_name}. "
+            f"Please carefully read, analyze, and understand its content. \n\n"
+            "Now provide a **detailed explanation and analysis** that a student/job seeker can easily understand. "
+            "👉 Break down the answer step by step with clear points. "
+            "📊 Highlight strengths, weaknesses, and areas of improvement. "
+            "📝 Give actionable suggestions on how the resume can be improved (e.g., skills, formatting, keywords, achievements). "
+            "📢 Use examples, analogies, and emojis to make the explanation engaging and memorable. "
+            "Make sure the explanation is **long, structured, and insightful** so the student gains maximum value."
+        )
+
+        
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=[
+                types.Part.from_bytes(
+                    data=file_bytes,
+                    mime_type='application/pdf' 
+                ),
+                prompt
+            ]
+        )
+
+        return response.text
 
     # -------------------Image Generation-------------------
 

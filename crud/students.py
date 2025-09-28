@@ -14,19 +14,28 @@ class StudentCrud(__StudentController):
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Something went wrong while uploading the file: {e}")
+
+    def upload_reumeto_ai(self,file_bytes,file_name):
+        try:
+            answer =GenAIResponse.upload_resume(file_bytes,file_name)
+            return {"answer": answer}
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Something went wrong while uploading the file: {e}")
     
     def flowchart_generation(self,prompt):
         try:
             chart= GenAIResponse.generate_flowchart(prompt)
             return chart
+        
         except Exception as e:
             raise HTTPException (status_code=500, detail=f"Something went wrong while generating the image: {e}")
         
     def roadmap_generation(self,prompt):
         try:
             roadmap =GenAIResponse.generate_roadmap(prompt)
-            print(roadmap)
             return{"roadmap":roadmap}
+        
         except Exception as e:
             raise HTTPException (status_code=500, detail=f"Something went wrong while generating the roadmap: {e}")
         
