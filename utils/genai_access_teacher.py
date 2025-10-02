@@ -3,7 +3,7 @@ from google.genai  import types
 
 class TeacherGainAIResponse:
     
-    def upload_and_ask(file_bytes: bytes, file_name,question: str) -> str:
+    def upload_and_ask(self,file_bytes: bytes, file_name,question: str) -> str:
 
         teacher_prompt = (
             f"📘 A Teacher has uploaded a file named **{file_name}**. "
@@ -31,7 +31,7 @@ class TeacherGainAIResponse:
 
         return response._get_text(str)
     
-    def uploadimage_and_ask(image_bytes:bytes,image_name,question)-> str:
+    def uploadimage_and_ask(self,image_bytes:bytes,image_name,question)-> str:
 
         prompt =(
                f"📘 A Teacher has uploaded a image named **{image_name}**. "

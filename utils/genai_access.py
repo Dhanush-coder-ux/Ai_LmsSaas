@@ -4,7 +4,7 @@ import re
 
 # -------------------File Understanding-------------------
 class GenAIResponse:
-    def upload_and_ask(file_bytes: bytes, file_name,question: str) -> str:
+    def upload_and_ask(self,file_bytes: bytes, file_name,question: str) -> str:
 
         prompt = (
             f"📚 I have uploaded a student file name {file_name}. "
@@ -28,7 +28,7 @@ class GenAIResponse:
 
         return response.text
     
-    def upload_resume(file_bytes: bytes, file_name) -> str:
+    def upload_resume(self,file_bytes: bytes, file_name) -> str:
 
         prompt = (
             f"📄 I have uploaded a resume file named {file_name}. "
@@ -53,12 +53,12 @@ class GenAIResponse:
             ]
         )
 
-        return response.text
+        return response._get_text(str)
 
     # -------------------Image Generation-------------------
 
 
-    def generate_flowchart(concept: str) -> dict:
+    def generate_flowchart(self,concept: str) -> dict:
         prompt = (
             f"You are a professional diagram generator. "
             f"Generate a **Mermaid.js flowchart** and also give a clear explanation "
@@ -89,7 +89,7 @@ class GenAIResponse:
     
     #-------------------Roadmap Generation-------------------
 
-    def generate_roadmap(student_prompt: str) -> str:
+    def generate_roadmap(self,student_prompt: str) -> str:
         prompt = (
             f"You are an expert AI Learning Path Designer. "
             f"Your task is to create a **personalized, step-by-step learning roadmap** "
