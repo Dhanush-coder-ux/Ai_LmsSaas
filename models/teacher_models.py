@@ -12,7 +12,7 @@ class Teacher(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     profile_url = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True))
 
     # Relationships
     prompts = relationship("TeacherPrompt", back_populates="teacher", cascade="all, delete-orphan")
@@ -26,7 +26,7 @@ class TeacherPrompt(Base):
     teacher_id = Column(String, ForeignKey("teachers.teacher_id", ondelete="CASCADE"))
     prompt = Column(String, nullable=False)
     ai_response = Column(String)  
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True))
 
     teacher = relationship("Teacher", back_populates="prompts")
 
@@ -38,7 +38,7 @@ class TeacherFile(Base):
     teacher_id = Column(String, ForeignKey("teachers.teacher_id", ondelete="CASCADE"))
     file_name = Column(String, nullable=False)
     ai_response = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True))
 
     teacher = relationship("Teacher", back_populates="files")
 
@@ -47,6 +47,7 @@ class TeacherImage(Base):
     
     id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     teacher_id = Column(String, ForeignKey("teachers.teacher_id", ondelete="CASCADE"))
+    image_name = Column(String,nullable=False)
     ai_response = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True))
     teacher = relationship("Teacher", back_populates="images")

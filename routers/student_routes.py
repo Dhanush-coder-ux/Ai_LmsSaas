@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, Form, Depends,HTTPException,File
+from fastapi import APIRouter, UploadFile, Form, Depends,HTTPException,File,BackgroundTasks
 from configs.pgdb import get_db
 from crud.students import StudentCrud
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -50,8 +50,8 @@ async def get_image(id: str,db: AsyncSession = Depends(get_db)):
 # Roadmap generation and retrieval
 
 @router.post('/roadmap-gen/{student_id}')
-def create_roadmap( student_id:str, prompt: str = Form(...),db:AsyncSession =Depends(get_db)):
-    return  StudentCrud(db=db).roadmap_generation(prompt=prompt,student_id=student_id)
+async def create_roadmap( student_id:str, prompt: str = Form(...),db:AsyncSession =Depends(get_db)):
+    return await StudentCrud(db=db).roadmap_generation(prompt=prompt,student_id=student_id)
 
 @router.get('/get-roadmap/{id}')
 async def get_roadmap( id: str, db: AsyncSession = Depends(get_db)):

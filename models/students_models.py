@@ -11,7 +11,7 @@ class Students(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     profile_url = Column(String)
-    created_at = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True))
 
     # Relationships
     prompts = relationship("StudentPrompt", back_populates="student", cascade="all, delete-orphan")
@@ -27,7 +27,7 @@ class StudentPrompt(Base):
     student_id = Column(String, ForeignKey("students.student_id", ondelete="CASCADE"))
     prompt = Column(String, nullable=False)
     ai_response = Column(String)  
-    created_at = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True))
 
     student = relationship("Students", back_populates="prompts")
 
@@ -39,7 +39,7 @@ class StudentFile(Base):
     student_id = Column(String, ForeignKey("students.student_id", ondelete="CASCADE"))
     file_name = Column(String, nullable=False)
     ai_response = Column(Text)
-    created_at = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True))
 
     student = relationship("Students", back_populates="files")
 
@@ -51,7 +51,7 @@ class StudentFlowchart(Base):
     student_id = Column(String, ForeignKey("students.student_id", ondelete="CASCADE"))
     prompt = Column(Text, nullable=False)
     ai_response = Column(Text)
-    created_at = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True))
 
     student = relationship("Students", back_populates="flowcharts")
 
@@ -63,6 +63,6 @@ class StudentRoadmap(Base):
     student_id = Column(String, ForeignKey("students.student_id", ondelete="CASCADE"))
     prompt = Column(Text, nullable=False)
     ai_response = Column(Text)
-    created_at = Column(TIMESTAMP(timezone=True), default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True))
 
     student = relationship("Students", back_populates="roadmaps")

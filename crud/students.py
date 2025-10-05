@@ -1,9 +1,10 @@
-from fastapi import HTTPException
+from fastapi import HTTPException,BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from models.students_models import StudentPrompt, StudentFile, StudentFlowchart, StudentRoadmap
 from datetime import datetime,timezone
 from utils.uniqueid import create_unique_id
+import json
 from utils.genai_access import GenAIResponse
 
 
@@ -18,7 +19,6 @@ class __StudentController:
         self.roadmap = StudentRoadmap
             
 class StudentCrud(__StudentController):
-
     async def upload_files_and_images(self, student_id, file_bytes, file_name, question):
         try:
             answer = self.genai.upload_and_ask(file_bytes, file_name, question)
@@ -35,20 +35,22 @@ class StudentCrud(__StudentController):
             self.db.add(add_answer)
             await self.db.commit()
             return {"message": "Successfully added!"}
-        
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error while uploading file: {str(e)}")
 
     async def pull_answer(self, id: str):
         try:
             result = (await self.db.execute(
-                select(self.table).where(self.table.student_id == id)
+                select(self.table.ai_response).where(self.table.student_id == id)  
             )
-            ).scalars().first()
+            ).mappings().all()
             if not result:
                 raise HTTPException(status_code=404, detail="Answer not found")
-            return {"answer": result.ai_response}
-        
+            return {"answer": result}
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching data: {str(e)}")
 
@@ -68,25 +70,28 @@ class StudentCrud(__StudentController):
             self.db.add(add_resume)
             await self.db.commit()
             return {"message": "Resume added successfully!"}
-        
+        except HTTPException:
+            raise  
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error uploading resume: {str(e)}")
 
     async def pull_resume(self, id: str):
         try:
             result =( await self.db.execute(
-                select(self.resume).where(self.resume.id == id)
-            )).scalars().first()
+                select(self.resume.ai_response).where(self.resume.student_id == id)
+            )).mappings().all()
             if not result:
                 raise HTTPException(status_code=404, detail="Resume not found")
-            return {"resume": result.ai_response}
-        
+            return {"resume": result}
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching resume: {str(e)}")
 
     async def flowchart_generation(self, student_id: str, prompt: str):
         try:
             chart = self.genai.generate_flowchart(prompt)
+            chart =json.dumps(chart)
             add_chart = self.flowchart(
                 id=create_unique_id(prompt),
                 student_id=student_id,
@@ -97,26 +102,29 @@ class StudentCrud(__StudentController):
             self.db.add(add_chart)
             await self.db.commit()
             return {"message": "Flowchart added successfully!"}
-        
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error generating flowchart: {str(e)}")
 
     async def pull_flowchart(self, id: str):
         try:
             result = (await self.db.execute(
-                select(self.flowchart).where(self.flowchart.id == id)
+                select(self.flowchart.ai_response).where(self.flowchart.student_id == id)
             )
-             ).scalars().first()
+             ).mappings().all()
             if not result:
                 raise HTTPException(status_code=404, detail="Flowchart not found")
-            return {"flowchart": result.ai_response}
-        
+            return {"flowchart": result}
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching flowchart: {str(e)}")
 
     async def roadmap_generation(self, student_id: str, prompt: str):
         try:
             roadmap = self.genai.generate_roadmap(prompt)
+            print("hello",roadmap)
             add_roadmap = self.roadmap(
                 id=create_unique_id(prompt),
                 student_id=student_id,
@@ -127,19 +135,21 @@ class StudentCrud(__StudentController):
             self.db.add(add_roadmap)
             await self.db.commit()
             return {"message": "Roadmap added successfully!"}
-        
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error generating roadmap: {str(e)}")
 
     async def pull_roadmap(self, id: str):
         try:
             result = (await self.db.execute(
-                select(self.roadmap).where(self.roadmap.id == id)
+                select(self.roadmap.ai_response).where(self.roadmap.student_id == id)
             )
-          ).scalars().first()
+          ).mappings().all()
             if not result:
                 raise HTTPException(status_code=404, detail="Roadmap not found")
-            return {"roadmap": result.ai_response}
-        
+            return {"roadmap": result}
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching roadmap: {str(e)}")
