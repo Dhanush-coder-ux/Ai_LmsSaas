@@ -10,7 +10,6 @@ class Students(Base):
     student_id = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    profile_url = Column(String)
     created_at = Column(TIMESTAMP(timezone=True))
 
     # Relationships

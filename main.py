@@ -20,10 +20,6 @@ async def lifespan(app:FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-
-
-
-
 app.include_router(teacher_routes.router)
 app.include_router(student_routes.router)
 app.include_router(login_routes.router)

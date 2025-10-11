@@ -153,3 +153,4 @@ class StudentCrud(__StudentController):
             raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching roadmap: {str(e)}")
+
