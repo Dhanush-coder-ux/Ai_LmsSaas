@@ -4,6 +4,8 @@ test = TestFastAPIRoutes()
 test.start_test()
 
 
+
+
 #api key , client secret, configuration [otp,google],redirect url "http://api.senseai.com/redirect" =>given by DeB-Auth
 
 #post /auth json={'apikey':'yourapikey'} => http://auth.debuggers.com/auth/login/1234-5678-9876

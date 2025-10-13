@@ -120,3 +120,30 @@ class GenAIResponse:
         
 
         return response._get_text(str)
+    
+    def uploadimage_and_ask(self,image_bytes:bytes,image_name,question)-> str:
+
+        prompt = (
+            f"📘 You are a Student, and your Teacher has uploaded an image named **{image_name}**. "
+            "Your task is to carefully observe and understand what’s shown in the image. 🧐\n\n"
+            f"🎯 The Teacher asks: {question}\n\n"
+            "💡 Explain your answer in a way that shows clear understanding:\n"
+            "- Give a **simple and clear explanation** that anyone can understand. \n"
+            "- Include **step-by-step reasoning** so it’s easy to follow. \n"
+            "- Add **examples or comparisons** from real life to make it meaningful. 🌍\n"
+            "- Use **emojis** to make your explanation fun and easy to remember. 😄\n\n"
+            "🎓 Your goal is to **learn deeply**, show your thinking process clearly, "
+            "and make sure your explanation proves that you truly understand the topic."
+        )
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[
+            types.Part.from_bytes(
+                data=image_bytes,
+                mime_type='image/jpeg',
+            ),
+            prompt
+            ]
+        )
+
+        return response._get_text(str)

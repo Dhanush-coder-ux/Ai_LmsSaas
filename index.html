@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebSocket Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f7f9fc;
+    }
+    h1 {
+      color: #333;
+    }
+    #messages {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+      background: #fff;
+    }
+    input {
+      padding: 8px;
+      width: 70%;
+    }
+    button {
+      padding: 8px 12px;
+      background: #007bff;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>WebSocket Test</h1>
+  <p>Status: <span id="status">Disconnected</span></p>
+
+  <div id="messages"></div>
+  <br />
+
+  <input type="text" id="msgInput" placeholder="Type a message..." />
+  <input type="text" id="userId" placeholder="enter user id..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    // 👇 Change this to your WebSocket URL
+    const socketUrl = "ws://127.0.0.1:8000/ws";
+    const ws = new WebSocket(socketUrl);
+
+    const statusEl = document.getElementById("status");
+    const messagesEl = document.getElementById("messages");
+    const msgInput = document.getElementById("msgInput");
+    const userId = document.getElementById('userId')
+
+    ws.onopen = () => {
+      statusEl.textContent = "🟢 Connected";
+      console.log("Connected to WebSocket server");
+    };
+
+    ws.onmessage = (event) => {
+      const msg = document.createElement("div");
+      msg.textContent = "Server: " + event.data;
+      messagesEl.appendChild(msg);
+    };
+
+    ws.onclose = () => {
+      statusEl.textContent = "🔴 Disconnected";
+      console.log("WebSocket closed");
+    };
+
+    ws.onerror = (err) => {
+      statusEl.textContent = "⚠️ Error";
+      console.error("WebSocket error", err);
+    };
+
+    function sendMessage() {
+      const message = msgInput.value;
+      const user_id = userId.value
+      if (message.trim() !== "") {
+        ws.send(JSON.stringify({user_id:user_id,message:message}));
+        const msg = document.createElement("div");
+        msg.textContent = "You: " + message;
+        messagesEl.appendChild(msg);
+        msgInput.value = "";
+      }
+    }
+  </script>
+</body>
+</html>

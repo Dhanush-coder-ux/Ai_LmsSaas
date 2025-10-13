@@ -1,6 +1,6 @@
 from fastapi import APIRouter,UploadFile,Form,Depends
 from configs.pgdb import get_db
-from crud.teachers import TeacherCrud
+from Controlers.teachers import TeacherCrud
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(

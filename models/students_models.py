@@ -17,6 +17,7 @@ class Students(Base):
     files = relationship("StudentFile", back_populates="student", cascade="all, delete-orphan")
     flowcharts = relationship("StudentFlowchart", back_populates="student", cascade="all, delete-orphan")
     roadmaps = relationship("StudentRoadmap", back_populates="student", cascade="all, delete-orphan")
+    image = relationship('StudentImage',back_populates="student",cascade="all, delete-orphan")
 
 
 class StudentPrompt(Base):
@@ -65,3 +66,14 @@ class StudentRoadmap(Base):
     created_at = Column(TIMESTAMP(timezone=True))
 
     student = relationship("Students", back_populates="roadmaps")
+
+class StudentImage(Base):
+    __tablename__ = 'student_images'
+    
+    id = Column(String, primary_key=True, index=True)
+    student_id = Column(String, ForeignKey("students.student_id", ondelete="CASCADE"))
+    image_name = Column(String,nullable=False)
+    ai_response = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True))
+
+    student = relationship("Students", back_populates="image")
