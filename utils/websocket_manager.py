@@ -9,8 +9,10 @@ class ConnectionManager:
         await ws.accept()
         self.active_connections[user_id]=ws
 
-    def disconnect(self,user_id:str):
-        del self.active_connections[user_id]
+    def disconnect(self, user_id: str):
+        if user_id in self.active_connections:
+            del self.active_connections[user_id]
+
 
     async def send_personal_message(self, message: str,user_id:str):
         connected_user_websocket=self.active_connections.get(user_id)

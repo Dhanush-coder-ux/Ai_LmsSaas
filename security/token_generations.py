@@ -23,7 +23,7 @@ class TokenData:
         expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_DAY)
         payload["exp"] = expire
         return jwt.encode(payload, key=REFRESH_TOKEN_KEY, algorithm=ALGORITHM)
-
+    @staticmethod
     def decode_jwt(token: str, key: str):
         try:
             decoded_data = jwt.decode(token, key=key, algorithms=[ALGORITHM])
@@ -39,7 +39,4 @@ class TokenData:
         return TokenData.create_access_token(decoded_data)
 
 
-token=TokenData
-print(token.create_access_token({"data":"jiii"}))
-    
 

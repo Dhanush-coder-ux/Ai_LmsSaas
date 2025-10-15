@@ -1,6 +1,7 @@
 import httpx
 from fastapi import APIRouter,HTTPException,Depends
 from fastapi.responses import RedirectResponse
+from security.token_verify import get_current_user
 from configs.debuggers import client_secrets,api_key,debuggers_baseurl
 import jwt
 from utils.uniqueid import create_unique_id
@@ -10,12 +11,14 @@ from utils.uniqueid import create_unique_id
 from datetime import datetime,timezone
 from configs.pgdb import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from icecream import ic
 from sqlalchemy import select
 
 router = APIRouter(
-    tags=['/user-login']
+    tags=['user-login']
 )
 
+token = TokenData()
 
 
 @router.get('/login')
@@ -36,13 +39,22 @@ async def redirect_url(code:str,db:AsyncSession=Depends(get_db)):
         res = await redirect.post(url=f'{debuggers_baseurl}/auth/authenticated-user',json={'code':code,'client_secret':client_secrets},timeout=80)
     if res.status_code == 200:
         infos = jwt.decode(res.json()['token'],options={"verify_signature": False})
+        ic(infos)
         id  = create_unique_id(infos['name'])  
-        token = TokenData
-        access_token = token.create_access_token({'user_id':id})
-        refresh_token = token.create_refresh_token({'user_id':id})
+        token =TokenData
+        access_token = token.create_access_token({
+            'user_id':id,
+            'email':infos['email']
+            })
+        refresh_token = token.create_refresh_token({
+            'user_id':id,
+            'email':infos['email']
+            })
+
+        ic(access_token)
         check =  await db.execute(
             select(
-                Students.email
+                Students
             ).where(Students.email == infos['email']))
         response = RedirectResponse(url=f'https://authdebuggers.vercel.app/?access_token={access_token}&refresh_token={refresh_token}&name={infos['name']}&profile=https://google.com/',status_code=302)
         if not check.scalar_one_or_none():
@@ -51,16 +63,14 @@ async def redirect_url(code:str,db:AsyncSession=Depends(get_db)):
                 student_id = id,
                 name = infos['name'],
                 email = infos['email'],
+                profile_url = infos['profile_picture'],
                 created_at =datetime.now(tz=timezone.utc)
             )
             db.add(adduser)
             await db.commit()
         return response
 
+@router.get('/me')
+async def get_me(current_user: dict = Depends(get_current_user)):
+    return {'message':'Authenticated !',"user":current_user['profile_url']}
     
-        
-
-
-
-
-         
