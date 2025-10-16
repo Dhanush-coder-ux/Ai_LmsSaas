@@ -36,7 +36,7 @@ async def websocket_connection(ws: WebSocket):
             ic("encrypted", encrypted_msg)
             decrypted_msg = decrypt_message(encrypted_msg)
             ic("decrypted", decrypted_msg)
-            data = json.loads(decrypted_msg)
+            data = json.loads(decrypted_msg) 
 
             if isinstance(data, dict):
                 incoming_uid = data.get("user_id")

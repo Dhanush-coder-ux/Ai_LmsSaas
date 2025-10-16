@@ -69,6 +69,7 @@ async def redirect_url(
                 name = infos['name'],
                 email = infos['email'],
                 profile_url = infos['profile_picture'],
+              
                 created_at =datetime.now(tz=timezone.utc)
             )
             db.add(adduser)
