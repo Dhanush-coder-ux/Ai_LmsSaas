@@ -1,5 +1,5 @@
 import httpx
-from fastapi import APIRouter,HTTPException,Depends
+from fastapi import APIRouter,HTTPException,Depends,BackgroundTasks
 from fastapi.responses import RedirectResponse
 from security.token_verify import get_current_user
 from configs.debuggers import client_secrets,api_key,debuggers_baseurl
@@ -13,9 +13,10 @@ from configs.pgdb import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from icecream import ic
 from sqlalchemy import select
+from utils.email_sending import send_email
 
 router = APIRouter(
-    tags=['user-login']
+    tags=['Login']
 )
 
 token = TokenData()
@@ -33,7 +34,11 @@ async def login():
         raise HTTPException(status_code=res.status_code,detail=f'{res.text}')  
        
 @router.get('/redirect')
-async def redirect_url(code:str,db:AsyncSession=Depends(get_db)):
+async def redirect_url(
+    background_tasks:BackgroundTasks,
+    code:str,
+    db:AsyncSession=Depends(get_db),
+):
     async with httpx.AsyncClient() as redirect:
         print(client_secrets)
         res = await redirect.post(url=f'{debuggers_baseurl}/auth/authenticated-user',json={'code':code,'client_secret':client_secrets},timeout=80)
@@ -68,9 +73,19 @@ async def redirect_url(code:str,db:AsyncSession=Depends(get_db)):
             )
             db.add(adduser)
             await db.commit()
+            background_tasks.add_task(
+            send_email,
+            to_email=infos['email'],
+            subject="🤖 Welcome to Sensei.ai — The Future of Learning",
+            template_name="welcome.html",
+            context={
+                "name": infos['name'],
+                "dashboard_url": f"https://sensei-ai.vercel.app/dashboard?user={infos['email']}"
+
+            }
+        )
         return response
 
 @router.get('/me')
 async def get_me(current_user: dict = Depends(get_current_user)):
     return {'message':'Authenticated !',"user":current_user['profile_url']}
-    

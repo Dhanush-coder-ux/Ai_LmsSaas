@@ -8,7 +8,6 @@ import json
 from utils.genai_access import GenAIResponse
 
 
-
 class __StudentController:
     def __init__(self, db: AsyncSession):
         self.db = db

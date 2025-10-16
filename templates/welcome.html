@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Sensei.ai - The Future of Learning</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f23 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .cyber-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(15,15,35,0.95) 0%, rgba(26,26,38,0.95) 100%);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0, 242, 254, 0.1),
+                        inset 0 0 100px rgba(0, 242, 254, 0.05);
+        }
+        
+        .cyber-glow {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00f2fe, #ff00ff, #00f2fe);
+            border-radius: 18px;
+            z-index: -1;
+            animation: cyberGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes cyberGlow {
+            0% { opacity: 0.3; filter: blur(10px); }
+            100% { opacity: 0.6; filter: blur(20px); }
+        }
+        
+        .email-header {
+            background: rgba(0, 242, 254, 0.1);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00f2fe 0%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.5);
+        }
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .email-body {
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .ai-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #00f2fe 0%, #ff00ff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .welcome-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00f2fe 0%, #ffffff 50%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cyber-card {
+            background: rgba(31, 41, 55, 0.6);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 242, 254, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 242, 254, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background: rgba(0, 242, 254, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .cta-button {
+            display: block;
+            width: 100%;
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #00f2fe 0%, #ff00ff 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 0, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 255, 0.1);
+        }
+        
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff00ff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .email-footer {
+            background: rgba(10, 10, 10, 0.8);
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-link {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe;
+            text-decoration: none;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: rgba(0, 242, 254, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .email-body {
+                padding: 30px 20px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .welcome-title {
+                font-size: 24px;
+            }
+            
+            .logo {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-container">
+        <div class="cyber-glow"></div>
+        
+        <!-- Header -->
+        <div class="email-header">
+            <div class="header-glow"></div>
+            <div class="logo">SENSEI.AI</div>
+            <div class="tagline">AI-Powered Learning Evolution</div>
+        </div>
+        
+        <!-- Body -->
+        <div class="email-body">
+            <div class="ai-avatar">🤖</div>
+            
+            <h1 class="welcome-title">SYSTEM INITIALIZED, {{name}}</h1>
+            
+            <div class="cyber-card">
+                <p>Welcome to the future of education. Your neural interface with Sensei.ai has been successfully established.</p>
+                <p><strong>Access Level:</strong> Premium Learner<br>
+                <strong>Neural Sync:</strong> 100% Complete<br>
+                <strong>AI Tutor:</strong> Online & Ready</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🚀</span>
+                    <h3>Personalized AI Paths</h3>
+                    <p>Adaptive learning algorithms tailored to your brain patterns</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Real-time Analytics</h3>
+                    <p>Monitor your cognitive progress with live dashboards</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔮</span>
+                    <h3>Predictive Learning</h3>
+                    <p>AI anticipates your knowledge gaps before they form</p>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <div>Active Learners</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99.8%</div>
+                    <div>Success Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div>AI Support</div>
+                </div>
+            </div>
+            
+            <a href="{{ dashboard_url }}" class="cta-button">
+                ACCESS LEARNING MATRIX
+            </a>
+            
+            <div class="cyber-card">
+                <h3>🚀 QUICK START PROTOCOL</h3>
+                <p>1. Complete your neural profile setup<br>
+                2. Take the AI assessment scan<br>
+                3. Receive your personalized learning matrix<br>
+                4. Begin your transformation</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="social-links">
+                <a href="#" class="social-link">Twitter</a>
+                <a href="#" class="social-link">LinkedIn</a>
+                <a href="#" class="social-link">Discord</a>
+            </div>
+            <div class="footer-text">
+                <p>Sensei.ai Neural Learning Network</p>
+                <p>This is an automated transmission. Do not reply directly.</p>
+                <p>© 2024 Sensei.ai Corporation. All cognitive rights reserved.</p>
+                <p><a href="#" style="color: rgba(0, 242, 254, 0.8);">Unsubscribe</a> | <a href="#" style="color: rgba(0, 242, 254, 0.8);">Neural Privacy</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

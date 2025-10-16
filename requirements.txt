@@ -19,3 +19,5 @@ gunicorn
 fastapi-testrunner
 cryptography
 icecream
+jinja2 
+aiosmtplib
