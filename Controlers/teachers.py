@@ -1,17 +1,18 @@
 from fastapi import HTTPException 
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils.genai_access_teacher import TeacherGainAIResponse
-from models.teacher_models import TeacherFile, TeacherImage
+from models.teacher_models import TeacherFile, TeacherImage,TeacherQuestionFile
 from sqlalchemy import select
 from datetime import datetime,timezone
 
 
 class __TeacherController:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db:AsyncSession):
         self.db = db
         self.genai = TeacherGainAIResponse() 
         self.file_table = TeacherFile
         self.image_table = TeacherImage
+        self.question_file = TeacherQuestionFile
 
 
 class TeacherCrud(__TeacherController):
@@ -76,3 +77,41 @@ class TeacherCrud(__TeacherController):
             raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error fetching image: {str(e)}")
+    
+    async def get_question_from_ai(self,  teacher_id ,file_bytes, file_name, question):
+        try:
+            ai_answer = self.genai.question_paper_generation(
+                file_bytes=file_bytes,
+                file_name=file_name,
+                question=question
+                )
+            add_question_file = self.question_file(
+                teacher_id = teacher_id,
+                file_name = file_name,
+                ai_response = ai_answer,
+                created_at = datetime.now(tz=timezone.utc)  
+            )
+
+            self.db.add(add_question_file)
+            await self.db.commit()
+            return {'successfully added'}
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500,detail=f"something went wrong while generating questionpaper{e}")
+    
+    async def pull_question_paper(self,teacher_id):
+        try:
+            get_question_paper =( await self.db.execute(
+                select(self.question_file).where(self.question_file.teacher_id == teacher_id)
+            )).mappings().all()
+
+            if not get_question_paper:
+                raise HTTPException(status_code=404,detail="question paper not found")
+            return {'question_paper':get_question_paper}
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500,detail=f"something went wrong to get a question paper")
+
+            

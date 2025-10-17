@@ -9,7 +9,7 @@ from utils.genai_access import GenAIResponse
 
 
 class __StudentController:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db:AsyncSession):
         self.db = db
         self.genai = GenAIResponse()
         self.table = StudentPrompt
@@ -179,8 +179,19 @@ class StudentCrud(__StudentController):
             )
             self.db.add(addimage_response)
             await self.db.commit()
-            return f'successfully addedd !'
+            return {f'successfully addedd !'}
         except HTTPException:
             raise
         except Exception as e:
             raise HTTPException(status_code=500,detail=f'something went wrong while adding image{e}')
+    
+    async def pull_image_understanding(self,student_id):
+        try:
+            result =( await self.db.execute(
+                select(self.image).where(self.image.student_id == student_id)
+            )).mappings().all()
+            return {'images_response':result}
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500,detail=f"something went wrong while geting a image's response{e}")
