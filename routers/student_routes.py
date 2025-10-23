@@ -5,13 +5,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from security.token_verify import get_current_user
 from typing import Annotated
 from crud.students_crud import StudentActivity
-
+from pydantic import BaseModel
+from icecream import ic
 
 
 router = APIRouter(
     tags=['studentscrud']
 )
 
+class ActivityRequest(BaseModel):
+    topic: str
+    duration: int
+    accuracy: float = None  
 
 current_user = Annotated[dict,Depends(get_current_user)]
 db = Annotated[AsyncSession,Depends(get_db)]
@@ -25,7 +30,6 @@ db = Annotated[AsyncSession,Depends(get_db)]
 
 @router.post('/upload-docs/{student_id}')
 async def create_file_response(
-    student_id: str,
     db:db,
     user : current_user,
     file: UploadFile=File(...),
@@ -55,7 +59,6 @@ async def get_answer(
 async def create_file_response(
     file: UploadFile,
     user : current_user,
-    student_id: str,
      db:db,
 ): 
     student_id = user['student_id']
@@ -78,7 +81,6 @@ async def get_resume(
 
 @router.post('/image-gen/{student_id}')
 async def create_image(
-    student_id:str,
      db:db,
     user : current_user,
     prompt: str = Form(...),
@@ -100,7 +102,6 @@ async def get_image(
 
 @router.post('/roadmap-gen/{student_id}')
 async def create_roadmap( 
-    student_id:str,
      db:db,
     user : current_user,
     prompt: str = Form(...),
@@ -123,7 +124,6 @@ async def get_roadmap(
 @router.post('/image-understand')
 async def image_understanding(
     image:UploadFile,
-    student_id:str,
      db:db,
     user : current_user,
     question:str = Form(...),
@@ -148,7 +148,7 @@ async def pull_students_task(
 
 
 @router.get("/task/{task_id}")
-async def pull_students_task(
+async def pull_students_taskby_id(
      db:db,
      task_id:str,
      user:current_user
@@ -158,7 +158,7 @@ async def pull_students_task(
 
 
 @router.get("/task/{task_id}/submit")
-async def pull_students_task(
+async def pull_students_task_submit(
      db:db,
      task_id:str,
      user:current_user,
@@ -166,3 +166,25 @@ async def pull_students_task(
 ):
     student_id = user["student_id"]
     return await StudentActivity(db=db).submit_the_task(task_id=task_id,student_id=student_id,submission_link=submission_link)
+
+@router.post('/activity')
+async def create_activity(
+    db:db,
+    user:current_user,
+    data:ActivityRequest
+
+):
+
+    student_id =user["student_id"]
+    ic(student_id)
+    return await StudentActivity(db=db).save_activity(student_id=student_id,topic=data.topic,duration=data.duration,accuracy=data.accuracy)
+
+@router.get('/suggestion')
+async def create_smart_suggesstion(
+    db:db,
+    user:current_user
+):
+    student_id = user['student_id']
+    if not student_id:
+        raise HTTPException(status_code=404,detail="user id not found")
+    return await StudentCrud(db=db).smartai_suggesstion(student_id=student_id)

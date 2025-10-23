@@ -7,6 +7,7 @@ import jwt
 from utils.uniqueid import create_unique_id
 from security.token_generations import TokenData
 from models.students_models import Students
+from models.teacher_models import Teacher
 from utils.uniqueid import create_unique_id
 from datetime import datetime,timezone
 from configs.pgdb import get_db
@@ -57,15 +58,30 @@ async def redirect_url(
             })
 
         ic(access_token)
+        # check =  await db.execute(
+        #     select(
+        #         Students
+        #     ).where(Students.email == infos['email']))
+        # response = RedirectResponse(url=f'https://authdebuggers.vercel.app/?access_token={access_token}&refresh_token={refresh_token}&name={infos['name']}&profile=https://google.com/',status_code=302)
+        # if not check.scalar_one_or_none():
+            
+        #     adduser = Students(
+        #         student_id = id,
+        #         name = infos['name'],
+        #         email = infos['email'],
+        #         profile_url = infos['profile_picture'],
+              
+        #         created_at =datetime.now(tz=timezone.utc)
+        #     )
         check =  await db.execute(
             select(
-                Students
-            ).where(Students.email == infos['email']))
+                Teacher
+            ).where(Teacher.email == infos['email']))
         response = RedirectResponse(url=f'https://authdebuggers.vercel.app/?access_token={access_token}&refresh_token={refresh_token}&name={infos['name']}&profile=https://google.com/',status_code=302)
         if not check.scalar_one_or_none():
             
-            adduser = Students(
-                student_id = id,
+            adduser = Teacher(
+                teacher_id = id,
                 name = infos['name'],
                 email = infos['email'],
                 profile_url = infos['profile_picture'],
@@ -74,6 +90,7 @@ async def redirect_url(
             )
             db.add(adduser)
             await db.commit()
+            
             background_tasks.add_task(
             send_email,
             to_email=infos['email'],
@@ -86,7 +103,3 @@ async def redirect_url(
             }
         )
         return response
-
-@router.get('/me')
-async def get_me(current_user: dict = Depends(get_current_user)):
-    return {'message':'Authenticated !',"user":current_user['profile_url']}

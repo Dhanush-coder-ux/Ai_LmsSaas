@@ -1,17 +1,14 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status
-from configs.cryptography import load_dotenv,os
-
-load_dotenv()
 
 
-ACCESS_TOKEN_KEY = os.getenv("ACCESS_TOKEN_KEY ")
-REFRESH_TOKEN_KEY =  os.getenv("REFRESH_TOKEN_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXP_TIME = os.getenv("ACCESS_TOKEN_EXP_TIME")
-REFRESH_TOKEN_DAY =  os.getenv("REFRESH_TOKEN_DAY ")      
 
+ACCESS_TOKEN_KEY = "DFGHJKWFECDHJKJHVBN24y67983409-!@#$%^&*(MGW98UYEWUY"
+REFRESH_TOKEN_KEY = "2345678#$%^&*(dfghjmk<DFghjasklioel*(@#39u9*())"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXP_TIME = 30 
+REFRESH_TOKEN_DAY = 7  
 
 class TokenData:
 

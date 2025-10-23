@@ -25,7 +25,7 @@ async def send_email(to_email: str, subject: str, template_name: str, context: d
             password=EMAIL_PASSWORD,
             start_tls=True,
         )
-        raise HTTPException(status_code=200,detail='Email sended successfully !')
+        return {'Email sended successfully !'}
     except HTTPException:
         raise
     except Exception as e:

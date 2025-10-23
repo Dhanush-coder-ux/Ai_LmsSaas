@@ -1,7 +1,6 @@
-from sqlalchemy import Column, String, ForeignKey, TIMESTAMP, Text
+from sqlalchemy import Column, String, ForeignKey, TIMESTAMP, Text,Float,Integer
 from sqlalchemy.orm import relationship
 from configs.pgdb import Base
-from datetime import datetime
 
 
 class Students(Base):
@@ -11,7 +10,6 @@ class Students(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     profile_url = Column(String,nullable=False)
-    role = Column(String,nullable=False)
     created_at = Column(TIMESTAMP(timezone=True))
 
     # Relationships
@@ -20,6 +18,9 @@ class Students(Base):
     flowcharts = relationship("StudentFlowchart", back_populates="student", cascade="all, delete-orphan")
     roadmaps = relationship("StudentRoadmap", back_populates="student", cascade="all, delete-orphan")
     image = relationship('StudentImage',back_populates="student",cascade="all, delete-orphan")
+    quizes = relationship("StudentActivitys",back_populates="student",cascade="all,delete-orphan")
+    assigned_tasks = relationship("TaskAssignment", back_populates="student", cascade="all, delete-orphan")
+
 
 
 class StudentPrompt(Base):
@@ -79,3 +80,15 @@ class StudentImage(Base):
     created_at = Column(TIMESTAMP(timezone=True))
 
     student = relationship("Students", back_populates="image")
+
+
+class StudentActivitys(Base):
+    __tablename__ = "student_activity"
+    id = Column(String, primary_key=True)
+    student_id = Column(String, ForeignKey("students.student_id",ondelete="CASCADE"))
+    topic = Column(String)
+    duration = Column(Integer,nullable=False)
+    accuracy = Column(Float, nullable=True)
+    timestamp = Column(TIMESTAMP(timezone=True))
+
+    student = relationship("Students",back_populates="quizes")

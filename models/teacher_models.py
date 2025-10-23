@@ -19,6 +19,7 @@ class Teacher(Base):
     files = relationship("TeacherFile", back_populates="teacher", cascade="all, delete-orphan")
     images = relationship("TeacherImage", back_populates="teacher", cascade="all, delete-orphan")
     question_paper = relationship("TeacherQuestionFile",back_populates="teacher",cascade="all, delete-orphan")
+    tasks = relationship("Task", back_populates="teacher", cascade="all, delete-orphan")
 
 
 class TeacherPrompt(Base):

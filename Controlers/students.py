@@ -6,6 +6,8 @@ from datetime import datetime,timezone
 from utils.uniqueid import create_unique_id
 import json
 from utils.genai_access import GenAIResponse
+from crud.students_crud import StudentActivity
+from icecream  import ic
 
 
 class __StudentController:
@@ -17,6 +19,7 @@ class __StudentController:
         self.flowchart = StudentFlowchart
         self.roadmap = StudentRoadmap
         self.image = StudentImage
+        self.analytic = StudentActivity
 
 class StudentCrud(__StudentController):
     
@@ -195,3 +198,23 @@ class StudentCrud(__StudentController):
             raise
         except Exception as e:
             raise HTTPException(status_code=500,detail=f"something went wrong while geting a image's response{e}")
+    
+    async def smartai_suggesstion(self,student_id):
+        ic(student_id)
+        try:
+            
+            analytics = await self.analytic.get_student_analytics(student_id=student_id)
+            ic(analytics)
+            if not analytics:
+                return {
+                    "suggestion": "No activity data found yet. Start studying to get personalized quiz recommendations!",
+                    "recommended_topic": None,
+                    "recommended_quiz_length": 0
+                }
+            suggessted_quize = self.genai.generate_quize(analytics=analytics)
+            ic(suggessted_quize)
+            return {"smart_quize" : suggessted_quize}
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500,detail="something went wrong in quize generation ")
