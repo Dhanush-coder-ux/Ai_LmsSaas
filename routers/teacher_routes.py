@@ -3,7 +3,7 @@ from configs.pgdb import get_db
 from Controlers.teachers import TeacherCrud
 from crud.teachers_crud import TeacherActivities
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated,List
+from typing import Annotated
 from security.token_verify import get_current_user
 from schemas.teacher_task import AssignTaskSchema
 
@@ -90,12 +90,12 @@ async def get_pdf_response( user:current_user, db:db,):
 @router.get('/get-image-response/{id}')
 async def get_image_response( user:current_user, db:db,):
     teacher_id = user['user_id']
-    return await TeacherCrud(db=db).pull_image(id)
+    return await TeacherCrud(db=db).pull_image(teacher_id=teacher_id)
 
 @router.get('/question-paper')
 async def get_question_paper( user:current_user, db:db,):
     teacher_id = user['user_id']
-    return await TeacherCrud(db=db).pull_question_paper(teacher_id=id)
+    return await TeacherCrud(db=db).pull_question_paper(teacher_id=teacher_id)
 
 
 

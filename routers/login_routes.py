@@ -81,6 +81,7 @@ async def redirect_url(
         if not check.scalar_one_or_none():
             
             adduser = Teacher(
+                role = "teacher",
                 teacher_id = id,
                 name = infos['name'],
                 email = infos['email'],

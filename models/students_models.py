@@ -5,7 +5,8 @@ from configs.pgdb import Base
 
 class Students(Base):
     __tablename__ = "students"
-    
+
+    role = Column(String, default="student", nullable=False)
     student_id = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)

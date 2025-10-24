@@ -7,7 +7,7 @@ import uuid
 
 class Teacher(Base):
     __tablename__ = "teachers"
-    
+    role = Column(String, default="teacher", nullable=False)
     teacher_id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)

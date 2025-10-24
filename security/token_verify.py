@@ -63,7 +63,7 @@ async def get_current_user(credentials: credintials, db: AsyncSession = Depends(
             user_id = user_teacher.teacher_id
 
         return {
-            "user_id": user_id,
+            "user_id": user_teacher.teacher_id,
             "name": user_obj.name,
             "email": user_obj.email,
             "role": role,
