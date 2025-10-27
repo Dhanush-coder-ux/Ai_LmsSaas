@@ -1,4 +1,5 @@
-from crud.teachers_crud import( select,HTTPException,AsyncSession,TaskAssignment,Task,func,update)
+from crud.teachers_crud import( HTTPException,AsyncSession,TaskAssignment,Task)
+from sqlalchemy import func,select,update
 from models.students_models import StudentActivitys
 from utils.uniqueid import create_unique_id
 from icecream import ic
@@ -87,10 +88,10 @@ class StudentActivity(__StudentCrud):
         except HTTPException :
             raise
         except Exception as e:
-            raise HTTPException(status_code=500,detail=f"something went wrong while saving activity")
+            raise HTTPException(status_code=500,detail=f"something went wrong while saving activity{e}")
         
     async def get_student_analytics(self, student_id):
-        ic(student_id)
+        ic("hello from get_student_analytics",student_id)
         try:
             result = (
                 await self.db.execute(

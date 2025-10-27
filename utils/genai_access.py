@@ -123,39 +123,7 @@ class GenAIResponse:
 
         return response._get_text(str)
     
-    # quize generation
-    def generate_quize(self, analytics) -> dict:
-        prompt = f"""
-        You are an intelligent tutor. Analyze this student's learning data
-        and recommend one topic they should focus on next.
-        Data: {analytics}
 
-        Respond strictly in JSON format:
-        {{
-            "suggestion": "Motivational sentence for student.",
-            "recommended_topic": "Topic name",
-            "recommended_quiz_length": 10
-        }}
-        """
-
-        try:
-            response = client.generate_content(
-                model="gemini-1.5-flash",
-                contents=[prompt]
-            )
-
-            text = response.text.strip()
-            # Gemini sometimes returns ```json ... ``` — remove it safely
-            if text.startswith("```"):
-                text = text.split("```json")[-1].split("```")[-1].strip()
-
-            # Convert to Python dict safely
-            data = json.loads(text)
-            return data
-
-        except Exception as e:
-            print("Error in generate_quize:", e)
-            raise HTTPException(status_code=500, detail="Gemini quiz generation failed")
     
 
     
@@ -185,3 +153,31 @@ class GenAIResponse:
         )
 
         return response._get_text(str)
+    
+
+        # quize generation
+    def generate_quize(self, analytics) -> str:
+        prompt = f"""
+        You are an intelligent tutor. Analyze this student's learning data
+        and recommend one topic they should focus on next.
+        Data: {analytics}
+
+        Respond strictly in JSON format:
+        {{
+            "suggestion": "Motivational sentence for student.",
+            "recommended_topic": "Topic name",
+            "recommended_quiz_length": 10
+        }}
+        """
+
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=[prompt]
+            )
+
+            
+            return response.text
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Gemini quiz generation failed{e}")

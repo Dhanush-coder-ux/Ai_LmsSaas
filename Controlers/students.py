@@ -19,7 +19,7 @@ class __StudentController:
         self.flowchart = StudentFlowchart
         self.roadmap = StudentRoadmap
         self.image = StudentImage
-        self.analytic = StudentActivity
+        self.analytic = StudentActivity(db=db)
 
 class StudentCrud(__StudentController):
     
@@ -200,7 +200,7 @@ class StudentCrud(__StudentController):
             raise HTTPException(status_code=500,detail=f"something went wrong while geting a image's response{e}")
     
     async def smartai_suggesstion(self,student_id):
-        ic(student_id)
+        ic(" smartai_suggesstion",student_id)
         try:
             
             analytics = await self.analytic.get_student_analytics(student_id=student_id)
@@ -212,9 +212,9 @@ class StudentCrud(__StudentController):
                     "recommended_quiz_length": 0
                 }
             suggessted_quize = self.genai.generate_quize(analytics=analytics)
-            ic(suggessted_quize)
+            ic(" smartai_suggesstion",suggessted_quize)
             return {"smart_quize" : suggessted_quize}
         except HTTPException:
             raise
         except Exception as e:
-            raise HTTPException(status_code=500,detail="something went wrong in quize generation ")
+            raise HTTPException(status_code=500,detail=f"something went wrong in quize generation {e}")
