@@ -1,5 +1,5 @@
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, String, ForeignKey, DateTime,Text
+from sqlalchemy import Column, String, ForeignKey, DateTime,Text,Boolean
 from configs.pgdb import Base
 from datetime import datetime
 import uuid
@@ -87,7 +87,7 @@ class TaskAssignment(Base):
     task_id = Column(String, ForeignKey("tasks.id"))
     student_id = Column(String, ForeignKey("students.student_id"))
     assigned_at = Column(DateTime(timezone=True))
-    is_completed = Column(String, default=False)
+    is_completed = Column(Boolean)
     submission_link = Column(String(500), nullable=True)
     feedback = Column(Text, nullable=True)
 

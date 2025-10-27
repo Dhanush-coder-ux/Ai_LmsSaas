@@ -6,8 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 from security.token_verify import get_current_user
 from schemas.teacher_task import AssignTaskSchema
-
-
+from datetime import datetime,timezone  
 
 
 router = APIRouter(
@@ -115,6 +114,6 @@ async def create_task(
         teacher_id=teacher_id,
         title=request.title,
         describtion=request.description,
-        due_date=request.due_date
+        due_date=request.due_date,
 )
 

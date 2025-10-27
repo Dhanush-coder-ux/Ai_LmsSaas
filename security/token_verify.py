@@ -50,6 +50,8 @@ async def get_current_user(credentials: credintials, db: AsyncSession = Depends(
             select(Teacher).where(Teacher.email == payload.get("email"))
         )).scalar_one_or_none()
 
+        from icecream import ic
+        ic(user_student,user_teacher)
         if not user_student and not user_teacher:
             raise HTTPException(status_code=404, detail="User not found")
         
@@ -61,9 +63,10 @@ async def get_current_user(credentials: credintials, db: AsyncSession = Depends(
             user_obj = user_teacher
             role = "teacher"
             user_id = user_teacher.teacher_id
-
+        ic(user_id)
+        await db.close_all()
         return {
-            "user_id": user_teacher.teacher_id,
+            "user_id": user_id or None,
             "name": user_obj.name,
             "email": user_obj.email,
             "role": role,
@@ -72,6 +75,7 @@ async def get_current_user(credentials: credintials, db: AsyncSession = Depends(
         
     except HTTPException:
         raise
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Something went wrong while verifying user credentials: {e}")
 

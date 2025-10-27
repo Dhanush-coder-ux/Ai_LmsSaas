@@ -7,14 +7,14 @@ from fastapi import HTTPException, status
 ACCESS_TOKEN_KEY = "DFGHJKWFECDHJKJHVBN24y67983409-!@#$%^&*(MGW98UYEWUY"
 REFRESH_TOKEN_KEY = "2345678#$%^&*(dfghjmk<DFghjasklioel*(@#39u9*())"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXP_TIME = 30 
+ACCESS_TOKEN_EXP_TIME = 7
 REFRESH_TOKEN_DAY = 7  
 
 class TokenData:
 
     def create_access_token(data: dict):
         payload = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXP_TIME)
+        expire = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXP_TIME)
         payload["exp"] = expire
         return jwt.encode(payload, key=ACCESS_TOKEN_KEY, algorithm=ALGORITHM)
 

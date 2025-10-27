@@ -143,7 +143,7 @@ async def pull_students_task(
      db:db,
      user:current_user
 ):
-    student_id = user["student_id"]
+    student_id = user["user_id"]
     return await StudentActivity(db=db).get_students_task(student_id=student_id)
 
 
@@ -153,18 +153,18 @@ async def pull_students_taskby_id(
      task_id:str,
      user:current_user
 ):
-    student_id = user["student_id"]
+    student_id = user["user_id"]
     return await StudentActivity(db=db).get_students_task_details(student_id=student_id,task_id=task_id)
 
 
-@router.get("/task/{task_id}/submit")
+@router.put("/task/{task_id}/submit")
 async def pull_students_task_submit(
      db:db,
      task_id:str,
      user:current_user,
      submission_link: str =Form(...)
 ):
-    student_id = user["student_id"]
+    student_id =user["user_id"]
     return await StudentActivity(db=db).submit_the_task(task_id=task_id,student_id=student_id,submission_link=submission_link)
 
 @router.post('/activity')
@@ -175,7 +175,7 @@ async def create_activity(
 
 ):
 
-    student_id =user["student_id"]
+    student_id =user["user_id"]
     ic(student_id)
     return await StudentActivity(db=db).save_activity(student_id=student_id,topic=data.topic,duration=data.duration,accuracy=data.accuracy)
 
@@ -184,7 +184,7 @@ async def create_smart_suggesstion(
     db:db,
     user:current_user
 ):
-    student_id = user['student_id']
+    student_id = user["user_id"]
     if not student_id:
         raise HTTPException(status_code=404,detail="user id not found")
     return await StudentCrud(db=db).smartai_suggesstion(student_id=student_id)

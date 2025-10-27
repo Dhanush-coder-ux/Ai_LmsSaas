@@ -1,9 +1,10 @@
 from fastapi import HTTPException
-from sqlalchemy import select,func
+from sqlalchemy import select,func,update
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.teacher_models import Task,TaskAssignment
 from utils.uniqueid import create_unique_id
-
+from icecream import ic
+from datetime import datetime,timezone
 
 class __TeacherCrud:
     def __init__(self,db:AsyncSession):
@@ -13,7 +14,7 @@ class __TeacherCrud:
 class TeacherActivities(__TeacherCrud):
 
     async def assign_task(self, title, describtion, due_date, teacher_id, student_ids):
-        from icecream import ic
+        
         ic(student_ids)
         ic(teacher_id)
         try:
@@ -23,25 +24,25 @@ class TeacherActivities(__TeacherCrud):
                     title=title,
                     describtion=describtion,
                     due_date=due_date,
-                    teacher_id=teacher_id
+                    teacher_id=teacher_id,
+                    assigned_at = datetime.now(timezone.utc)
                 )
                 self.db.add(add_task)
-                await self.db.flush()
+                
 
                 for student_id in student_ids:
                     task_for_students = self.task_assign(
+                        id = create_unique_id(student_id),
                         task_id=add_task.id,
                         student_id=student_id
                     )
                     self.db.add(task_for_students)
 
-                await self.db.commit()
-
-            return {
-                "message": "Task Added Successfully!",
-                "task_id": add_task.id,
-                "assigned_to": student_ids
-            }
+                return {
+                    "message": "Task Added Successfully!",
+                    "task_id": add_task.id,
+                    "assigned_to": student_ids
+                }
 
         except HTTPException:
             raise

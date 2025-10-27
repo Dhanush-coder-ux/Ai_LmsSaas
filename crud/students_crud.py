@@ -1,5 +1,4 @@
-from crud.teachers_crud import( select,HTTPException,AsyncSession,TaskAssignment,Task,func)
-from datetime import datetime,timezone
+from crud.teachers_crud import( select,HTTPException,AsyncSession,TaskAssignment,Task,func,update)
 from models.students_models import StudentActivitys
 from utils.uniqueid import create_unique_id
 from icecream import ic
@@ -26,7 +25,8 @@ class StudentActivity(__StudentCrud):
         except HTTPException:
             raise
         except Exception as e:
-            raise HTTPException(status_code=500,detail=f"something went wrong while geting  all task")
+
+            raise HTTPException(status_code=500,detail=f"something went wrong while geting  all task {e}")
         
         
     async def get_students_task_details(self,student_id,task_id):
@@ -50,26 +50,24 @@ class StudentActivity(__StudentCrud):
         
 
     async def submit_the_task(self ,task_id, student_id, submission_link ):
-        assignment =( await self.db.execute(
-            select(TaskAssignment)
-            .where(
+        async with self.db.begin():
+            assignment = update(TaskAssignment).where(
                 TaskAssignment.task_id == task_id,
                 TaskAssignment.student_id == student_id
-            )
-        )).scalar_one_or_none()
-        
-        if not assignment:
-            raise HTTPException(status_code=404,detail="Task not found or not assigned you !")
-        
-        assignment.submission_link = submission_link
-        assignment.is_completed = True
-        assignment.assigned_at = datetime.now(tz=timezone.utc)
-        await self.db.commit()
+            ).values(
+                submission_link = submission_link,
+                is_completed = True,
+            ).returning(TaskAssignment.task_id)
 
-        return {
-            "message": " Task submitted successfully!", 
-            "submission_link": submission_link
-            }
+            is_updated = (await self.db.execute(assignment)).scalar_one_or_none()
+
+            if not is_updated:
+                raise HTTPException(status_code=404,detail="Task not found or not assigned you !")
+
+            return {
+                "message": " Task submitted successfully!", 
+                "submission_link": submission_link
+                }
     
     async def save_activity(self,student_id,topic,duration,accuracy):
         ic(student_id,topic,duration,accuracy)
